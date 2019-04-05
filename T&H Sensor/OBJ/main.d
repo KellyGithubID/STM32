@@ -35,3 +35,4 @@
 ..\obj\main.o: ..\HAREWARE\OLED_IIC\OLED_IIC.h
 ..\obj\main.o: D:\Programs\MDK5\Core\ARM\ARMCC\Bin\..\include\stdlib.h
 ..\obj\main.o: ..\HAREWARE\DHT11\dht11.h
+..\obj\main.o: ..\SYSTEM\usart\usart.h
