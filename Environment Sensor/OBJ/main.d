@@ -32,6 +32,7 @@
 ..\obj\main.o: ..\SYSTEM\sys\sys.h
 ..\obj\main.o: D:\Programs\MDK5\Core\ARM\ARMCC\Bin\..\include\stdio.h
 ..\obj\main.o: D:\Programs\MDK5\Core\ARM\ARMCC\Bin\..\include\string.h
+..\obj\main.o: ..\HAREWARE\O2\O2.h
 ..\obj\main.o: ..\HAREWARE\DHT11\dht11.h
 ..\obj\main.o: ..\HAREWARE\SGP30\sgp30.h
 ..\obj\main.o: ..\HAREWARE\IIC\myiic.h

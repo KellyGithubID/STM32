@@ -3,6 +3,7 @@
 #include "sys.h"
 #include <stdio.h>
 #include <string.h>
+#include "O2.h"
 #include "dht11.h"
 #include "sgp30.h"
 #include "usart.h"
@@ -11,11 +12,14 @@
  STM32F103C8T6     
  DHT11温湿度传感器
  SGP30传感器
+ SMT8408 4系列电化学氧气检测模组
  CH340串口转USB
  SGP30:VCC, SCL, SDA, GND
  对应接口: 3V, PB6, PB7, GND
  DHT11:VCC, DATA, GND
  对应接口: 3V, PB11, GND
+ SMT8408:AD, GND, 5V
+ 对应接口: PB0, GND, 5V
  CH340:TXD, RXD, GND
  对应接口: PA10, PA9, GND
 ************************************************/ 
@@ -26,10 +30,12 @@ int main(void)
 	u8 char_c = 'c';		//CO2, TVOC
 	u8 char_t = 't';		//温度
 	u8 char_h = 'h';		//湿度
+	u8 char_o = 'o';
 	
 	u16 t=0;			//用于设置时间间隔
 	u16 co2 = 0;
 	u16 tvoc = 0;
+	u16 o2 = 0;
 	u8 temperature = 100;  	    
 	u8 humidity = 100;  
 	u8 temp = 0;		//用于临时存储温度值
@@ -41,7 +47,7 @@ int main(void)
 	uart_init(9600);
 	
 	DHT11_Init();
-	
+	O2_Init();
 	SGP30_Init();
 	SGP30_Start_Measure();
 
@@ -56,8 +62,19 @@ int main(void)
 	{
 		if(t==500)		//经过一定时间间隔后读取传感器数据，避免数据连续刷新
 		{
-			
 			t = 0;
+			
+			
+			o2 = Get_O2_ADC();		//得到O2传感器返回的ADC数据，具体数据处理在上位机程序当中进行
+			USART_SendData(USART1, char_o);
+			delay_ms(12);
+			USART_SendData(USART1, o2>>8);
+			delay_ms(12);
+			USART_SendData(USART1, o2&0x00ff);
+			while(USART_GetFlagStatus(USART1, USART_FLAG_TC)!=SET);
+			USART_RX_STA = 0;
+			
+			
 			DHT11_Read_Data(&temp,&humi);		//读取温湿度
 			
 			if (temp != temperature)		//温度有变化则刷新温度值
