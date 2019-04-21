@@ -36,4 +36,5 @@
 ..\obj\main.o: ..\HAREWARE\DHT11\dht11.h
 ..\obj\main.o: ..\HAREWARE\SGP30\sgp30.h
 ..\obj\main.o: ..\HAREWARE\IIC\myiic.h
+..\obj\main.o: ..\HAREWARE\SDS011\sds011.h
 ..\obj\main.o: ..\SYSTEM\usart\usart.h

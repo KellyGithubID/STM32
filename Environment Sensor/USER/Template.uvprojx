@@ -365,7 +365,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\USER;..\CORE;..\STM32F10x_FWLib\inc;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\HAREWARE\LED;..\HAREWARE\KEY;..\HAREWARE\OLED_IIC;..\HAREWARE\DHT11;..\HAREWARE\SGP30;..\HAREWARE\IIC;..\HAREWARE\O2</IncludePath>
+              <IncludePath>..\USER;..\CORE;..\STM32F10x_FWLib\inc;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\HAREWARE\LED;..\HAREWARE\KEY;..\HAREWARE\OLED_IIC;..\HAREWARE\DHT11;..\HAREWARE\SGP30;..\HAREWARE\IIC;..\HAREWARE\O2;..\HAREWARE\SDS011</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -627,6 +627,11 @@
               <FileName>O2.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\HAREWARE\O2\O2.c</FilePath>
+            </File>
+            <File>
+              <FileName>sds011.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HAREWARE\SDS011\sds011.c</FilePath>
             </File>
           </Files>
         </Group>

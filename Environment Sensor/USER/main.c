@@ -6,6 +6,7 @@
 #include "O2.h"
 #include "dht11.h"
 #include "sgp30.h"
+#include "sds011.h"
 #include "usart.h"
 
 /************************************************    
@@ -13,13 +14,16 @@
  DHT11温湿度传感器
  SGP30传感器
  SMT8408 4系列电化学氧气检测模组
+ SDS011空气质量传感器
  CH340串口转USB
  SGP30:VCC, SCL, SDA, GND
  对应接口: 3V, PB6, PB7, GND
  DHT11:VCC, DATA, GND
- 对应接口: 3V, PB11, GND
+ 对应接口: 3V, PA11, GND
  SMT8408:AD, GND, 5V
  对应接口: PB0, GND, 5V
+ SDS011:5V, TXD, RXD, GND
+ 对应接口: 5V, PB11, PB10, GND
  CH340:TXD, RXD, GND
  对应接口: PA10, PA9, GND
 ************************************************/ 
@@ -30,12 +34,15 @@ int main(void)
 	u8 char_c = 'c';		//CO2, TVOC
 	u8 char_t = 't';		//温度
 	u8 char_h = 'h';		//湿度
-	u8 char_o = 'o';
+	u8 char_o = 'o';		//O2
+	u8 char_p = 'p';		//空气质量PM2.5 PM10
 	
 	u16 t=0;			//用于设置时间间隔
 	u16 co2 = 0;
 	u16 tvoc = 0;
 	u16 o2 = 0;
+	u16 pm2 = 0;
+	u16 pm10 = 0;
 	u8 temperature = 100;  	    
 	u8 humidity = 100;  
 	u8 temp = 0;		//用于临时存储温度值
@@ -48,6 +55,7 @@ int main(void)
 	
 	DHT11_Init();
 	O2_Init();
+	SDS011_Init();
 	SGP30_Init();
 	SGP30_Start_Measure();
 
@@ -60,9 +68,24 @@ int main(void)
 	
 	while(1)
 	{
-		if(t==500)		//经过一定时间间隔后读取传感器数据，避免数据连续刷新
+		if(t==1000)		//经过一定时间间隔后读取传感器数据，避免数据连续刷新
 		{
 			t = 0;
+
+			SDS011_Get_Value(&pm2, &pm10);
+			delay_ms(50000);
+			USART_SendData(USART1, char_p);
+			delay_ms(12);
+			USART_SendData(USART1, pm2>>8);
+			delay_ms(12);
+			USART_SendData(USART1, pm2&0x00ff);
+			delay_ms(12);
+			USART_SendData(USART1, pm10>>8);
+			delay_ms(12);
+			USART_SendData(USART1, pm10&0x00ff);
+			delay_ms(12);
+			while(USART_GetFlagStatus(USART1, USART_FLAG_TC)!=SET);
+			USART_RX_STA = 0;
 			
 			
 			o2 = Get_O2_ADC();		//得到O2传感器返回的ADC数据，具体数据处理在上位机程序当中进行
@@ -71,6 +94,7 @@ int main(void)
 			USART_SendData(USART1, o2>>8);
 			delay_ms(12);
 			USART_SendData(USART1, o2&0x00ff);
+			delay_ms(12);
 			while(USART_GetFlagStatus(USART1, USART_FLAG_TC)!=SET);
 			USART_RX_STA = 0;
 			
